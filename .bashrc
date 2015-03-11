@@ -25,7 +25,7 @@ export HISTSIZE=4096
 
 export EDITOR=nano
 export PAGER=less
-export LESS="--ignore-case --LONG-PROMPT --SILENT --no-init"
+export LESS="--RAW-CONTROL-CHARS --chop-long-lines --quit-if-one-screen --ignore-case --LONG-PROMPT --SILENT --no-init"
 
 # add user bin directory
 [ -d "${HOME}/bin" ] && export PATH="${PATH}:${HOME}/bin"
