@@ -28,7 +28,7 @@ export PAGER=less
 export LESS="--RAW-CONTROL-CHARS --chop-long-lines --quit-if-one-screen --ignore-case --LONG-PROMPT --SILENT --no-init"
 
 # add user bin directory
-[ -d "${HOME}/bin" ] && export PATH="${PATH}:${HOME}/bin"
+[[ -d "${HOME}/bin" ]] && export PATH="${PATH}:${HOME}/bin"
 
 # list directories with color
 eval `dircolors`
@@ -62,8 +62,10 @@ PS1='\[\e[1;32m\][\u@\h \W\[\e[0m\]`[ $? == 0 ] || echo " \[\e[1;91m\]\\\\$?=$?\
 # red for root
 # PS1='\[\e[1;31m\][\u@\h \W][$?]\$\[\e[0m\] '
 
-[ -f /etc/profile.d/vte/sh ] && . /etc/profile.d/vte.sh
+[[ -f /etc/profile.d/vte/sh ]] && . /etc/profile.d/vte.sh
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
+
+ssh-add -l >/dev/null || alias ssh='ssh-add -l >/dev/null || ssh-add && unalias ssh; ssh'
