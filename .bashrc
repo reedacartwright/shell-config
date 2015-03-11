@@ -68,4 +68,5 @@ PS1='\[\e[1;32m\][\u@\h \W\[\e[0m\]`[ $? == 0 ] || echo " \[\e[1;91m\]\\\\$?=$?\
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-ssh-add -l >/dev/null || alias ssh='ssh-add -l >/dev/null || ssh-add && unalias ssh; ssh'
+# Execute ssh-add when ssh is first run
+#ssh-add -l >/dev/null || alias ssh='ssh-add -l >/dev/null || ssh-add && unalias ssh; ssh'
