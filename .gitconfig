@@ -2,4 +2,9 @@
 	email = cartwright@asu.edu
 	name = Reed A. Cartwright
 [push]
-	deafult = simple
+	default = simple
+[color]
+	ui = auto
+[core]
+	editor = nano
+
