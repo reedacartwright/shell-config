@@ -23,8 +23,8 @@ export HISTIGNORE='pwd:ls:history:'
 # keep the history size up to 4096 lines
 export HISTSIZE=4096 
 
-export EDITOR=nano
-export PAGER=less
+type -p nano >/dev/null && export EDITOR=nano
+type -p less >/dev/null && export PAGER=less
 export LESS="--RAW-CONTROL-CHARS --chop-long-lines --quit-if-one-screen --ignore-case --LONG-PROMPT --SILENT --no-init"
 
 # add user bin directory
@@ -54,13 +54,14 @@ alias procperuser='ps ax -o user | sort | uniq -c | sort -nr'
  
 # show the processes consuming the most memory
 memhogs () { TR=`free|grep Mem:|awk '{print $2}'`;ps axo rss,comm,pid|awk -v tr=$TR '{proc_list[$2]+=$1;} END {for (proc in proc_list) {proc_pct=(proc_list[proc]/tr)*100; printf("%d\t%-16s\t%0.2f%\n",proc_list[proc],proc,proc_pct);}}'|sort -n |tail -n 10; };
- 
-#PS1='[\u@\h \W]\$ '
 
+if [[ $EUID -ne 0 ]]; then 
 # Green for users
-PS1='\[\e[1;32m\][\u@\h \W\[\e[0m\]`[ $? == 0 ] || echo " \[\e[1;91m\]\\\\$?=$?\[\e[0m\]"`\[\e[1;32m\]]\$\[\e[0m\] '
+  PS1='\[\e[1;32m\][\u@\h \W\[\e[0m\]`[ $? == 0 ] || echo " \[\e[1;91m\]\\\\$?=$?\[\e[0m\]"`\[\e[1;32m\]]\$\[\e[0m\] '
+else
 # red for root
-# PS1='\[\e[1;31m\][\u@\h \W][$?]\$\[\e[0m\] '
+  PS1='\[\e[1;31m\][\u@\h \W\[\e[0m\]`[ $? == 0 ] || echo " \[\e[1;92m\]\\\\$?=$?\[\e[0m\]"`\[\e[1;31m\]]\$\[\e[0m\] '
+fi
 
 [[ -f /etc/profile.d/vte/sh ]] && . /etc/profile.d/vte.sh
 
