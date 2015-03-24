@@ -38,8 +38,12 @@ endif
 # A righteous umask
 umask 022
 
-setenv	EDITOR	nano
-setenv	PAGER	less
+if (-X nano) then
+	setenv	EDITOR	nano
+endif
+if (-X less) then
+	setenv	PAGER	less
+endif
 setenv LESS "--RAW-CONTROL-CHARS --chop-long-lines --quit-if-one-screen --ignore-case --LONG-PROMPT --SILENT --no-init"
 
 if (-X elinks) then
@@ -53,8 +57,8 @@ endif
 if ($?prompt) then
 	# An interactive shell -- set some stuff up
 	set filec
-	set history = 100
-	set savehist = 100
+	set history = 8192
+	set savehist = 8192 merge
 	set mail = (/var/mail/$USER)
 	if ( $?tcsh ) then
 		bindkey "^W" backward-delete-word
@@ -108,9 +112,6 @@ set filec
 set listlinks
 set listjobs
 set noclober
-
-set history = 8192
-set savehist = 8192 merge
 
 set color
 setenv GREP_COLOR 31 # red
