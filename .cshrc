@@ -5,14 +5,18 @@
 # see also csh(1), environ(7).
 #
 
-alias h		history 25
-alias j		jobs -l
+setenv SHELL $shell
 
-alias ls "ls-F -I"
-alias la "ls-F -A"
-alias lc "ls-F -lThoI"
-alias ll "ls-F -lThoA"
-alias pdiff "diff -urN -x CVS -x .svn -I '^# .FreeBSD: '"
+if( `uname` == FreeBSD ) then
+	alias ls 'ls-F -I'
+	alias la 'ls-F -A'
+	alias ll 'ls-F -lThoA'
+	alias pdiff "diff -urN -x CVS -x .svn -I '^# .FreeBSD: '"
+else
+	alias ls 'ls-F --color=auto'
+	alias ll 'ls-F -lhA'
+	alias la 'ls-F -A'
+endif
 
 # bsdgrep is FreeBSD >=9
 if (-X bsdgrep) then
@@ -36,9 +40,7 @@ umask 022
 
 setenv	EDITOR	nano
 setenv	PAGER	less
-setenv LESS "--ignore-case --LONG-PROMPT --SILENT --no-init"
-setenv	BLOCKSIZE	K
-setenv  FTP_PASSIVE 1
+setenv LESS "--RAW-CONTROL-CHARS --chop-long-lines --quit-if-one-screen --ignore-case --LONG-PROMPT --SILENT --no-init"
 
 if (-X elinks) then
 	setenv BROWSER elinks
@@ -93,7 +95,8 @@ else
 #	/usr/sbin/kbdcontrol -r fast
 endif
 
-set prompt="[%n@%m:%c]%#"
+
+alias precmd 'set prompt="%{\033[1;32m%}[%n@%m %c`test $? = 0 || echo %\{\\033[1\;91m\\ \\044\\077%\}=%\?%\{\\033[1\;32m%\}`]%#%{\033[0m%} "'
 
 set autolist
 set autocorrect
@@ -110,14 +113,17 @@ set history = 8192
 set savehist = 8192 merge
 
 set color
-setenv CLICOLOR
-#setenv LSCOLORS ExGxFxdxCxDxDxhbadExEx
-setenv LS_COLORS "no=00:fi=00:di=34:ln=01;31:pi=34;43:so=31;43:bd=30;43:cd=30;43:or=01;35:ex=01;31:"
 setenv GREP_COLOR 31 # red
 setenv ACK_COLOR_FILENAME red
 
-
-set printexitvalue
+if( `uname` == Linux ) then
+	eval `dircolors`
+else
+	setenv CLICOLOR
+	setenv LSCOLORS  ExGxcxdxCxegedCxCxExEx
+	#setenv LS_COLORS "no=00:fi=00:di=34:ln=01;31:pi=34;43:so=31;43:bd=30;43:cd=30;43:or=01;35:ex=01;31:"
+	#setenv LSCOLORS ExGxFxdxCxDxDxhbadExEx
+endif
 
 if (-e ~/.cshrc-completions) then
 	source ~/.cshrc-completions
