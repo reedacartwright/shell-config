@@ -99,8 +99,12 @@ else
 #	/usr/sbin/kbdcontrol -r fast
 endif
 
-
-alias precmd 'set prompt="%{\033[1;32m%}[%n@%m %c`test $? = 0 || echo %\{\\033[1\;91m\\ \\044\\077%\}=%\?%\{\\033[1\;32m%\}`]%#%{\033[0m%} "'
+if( `id -u` == "0") then
+	alias precmd 'set prompt="%{\033[1;31m%}[%n@%m %c`test $? = 0 || echo %\{\\033[1\;92m\\ \\044\\077%\}=%\?%\{\\033[1\;31m%\}`]%#%{\033[0m%} "'
+else
+	alias precmd 'set prompt="%{\033[1;32m%}[%n@%m %c`test $? = 0 || echo %\{\\033[1\;91m\\ \\044\\077%\}=%\?%\{\\033[1\;32m%\}`]%#%{\033[0m%} "'
+endif
+set promptchars = ">#"
 
 set autolist
 set autocorrect
