@@ -5,7 +5,9 @@
 # see also csh(1), environ(7).
 #
 
-setenv SHELL $shell
+if($?shell) then
+	setenv SHELL "${shell}"
+endif
 
 if( `uname` == FreeBSD ) then
 	alias ls 'ls-F -I'
@@ -56,6 +58,13 @@ endif
 
 if ($?prompt) then
 	# An interactive shell -- set some stuff up
+	if( `id -u` == "0") then
+		alias precmd 'set prompt="%{\033[1;31m%}[%n@%m %c`test $? = 0 || echo %\{\\033[1\;92m\\ \\044\\077%\}=%\?%\{\\033[1\;31m%\}`]%#%{\033[0m%} "'
+	else
+		alias precmd 'set prompt="%{\033[1;32m%}[%n@%m %c`if($? != 0) echo %\{\\033[1\;91m%\}\\ \\044\\077=%?%\{\\033[1\;32m%\}`]%#%{\033[0m%} "'
+	endif
+	set promptchars = ">#"
+
 	set filec
 	set history = 8192
 	set savehist = 8192 merge
@@ -99,13 +108,6 @@ else
 #	/usr/sbin/kbdcontrol -r fast
 endif
 
-if( `id -u` == "0") then
-	alias precmd 'set prompt="%{\033[1;31m%}[%n@%m %c`test $? = 0 || echo %\{\\033[1\;92m\\ \\044\\077%\}=%\?%\{\\033[1\;31m%\}`]%#%{\033[0m%} "'
-else
-	alias precmd 'set prompt="%{\033[1;32m%}[%n@%m %c`test $? = 0 || echo %\{\\033[1\;91m\\ \\044\\077%\}=%\?%\{\\033[1\;32m%\}`]%#%{\033[0m%} "'
-endif
-set promptchars = ">#"
-
 set autolist
 set autocorrect
 set autoexpand
@@ -131,5 +133,5 @@ else
 endif
 
 if (-e ~/.cshrc-completions) then
-	source ~/.cshrc-completions
+	#source ~/.cshrc-completions
 endif
