@@ -58,11 +58,18 @@ endif
 
 if ($?prompt) then
 	# An interactive shell -- set some stuff up
+
 	if( `id -u` == "0") then
-		alias precmd 'set prompt="%{\033[1;31m%}[%n@%m %c`test $? = 0 || echo %\{\\033[1\;92m\\ \\044\\077%\}=%\?%\{\\033[1\;31m%\}`]%#%{\033[0m%} "'
+		set pcol='%{\e[1;31m%}'
+		set ecol='%{\e[1;32m%}'
 	else
-		alias precmd 'set prompt="%{\033[1;32m%}[%n@%m %c`if($? != 0) echo %\{\\033[1\;91m%\}\\ \\044\\077=%?%\{\\033[1\;32m%\}`]%#%{\033[0m%} "'
+		set pcol='%{\e[1;32m%}'
+		set ecol='%{\e[1;31m%}'
 	endif
+	set ncol='%{\e[0m%}'
+
+	alias precmd 'set prompt="${pcol}[%n@%m %c`if($? != 0) echo "\""${ecol} \\044\\077=%?${pcol}"\""`]%#${ncol} "'
+
 	set promptchars = ">#"
 
 	set filec
