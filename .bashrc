@@ -63,7 +63,7 @@ else
   PS1='\[\e[1;31m\][\u@\h \W\[\e[0m\]`[ $? == 0 ] || echo " \[\e[1;92m\]\\\\$?=$?\[\e[0m\]"`\[\e[1;31m\]]\$\[\e[0m\] '
 fi
 
-[[ -f /etc/profile.d/vte/sh ]] && . /etc/profile.d/vte.sh
+[[ -f /etc/profile.d/vte.sh ]] && . /etc/profile.d/vte.sh
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.

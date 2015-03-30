@@ -8,3 +8,4 @@
 
 # Evaluate SSH-Agent
 [[ -x /usr/bin/keychain ]] && eval $(/usr/bin/keychain --agents ssh --quick --quiet --eval id_rsa)
+true
