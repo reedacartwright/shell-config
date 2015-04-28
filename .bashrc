@@ -31,10 +31,18 @@ export LESS="--RAW-CONTROL-CHARS --chop-long-lines --quit-if-one-screen --ignore
 [[ -d "${HOME}/bin" ]] && export PATH="${PATH}:${HOME}/bin"
 
 # list directories with color
-eval `dircolors`
-alias ls='ls -F --color=auto'
-alias ll='ls -lhA'
-alias la='ls -A'
+if [ `uname` == Linux ]; then
+  eval `dircolors`
+  alias ls='ls -F --color=auto'
+  alias ll='ls -lhA'
+  alias la='ls -A'
+else
+  export CLICOLOR=yes
+  export LSCOLORS=ExGxcxdxCxegedCxCxExEx
+  alias ls='ls -F'
+  alias la='ls -FA'
+  alias ll='ls -FlThoA'
+fi
 
 # highlight grep matches with color
 alias grep='grep --color=auto'
