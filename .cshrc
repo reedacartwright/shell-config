@@ -140,5 +140,5 @@ else
 endif
 
 if (-e ~/.cshrc-completions) then
-	#source ~/.cshrc-completions
+	source ~/.cshrc-completions
 endif
