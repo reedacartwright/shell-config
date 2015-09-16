@@ -79,3 +79,6 @@ shopt -s checkwinsize
 
 # Execute ssh-add when ssh is first run
 #ssh-add -l >/dev/null || alias ssh='ssh-add -l >/dev/null || ssh-add && unalias ssh; ssh'
+
+# alias for working with Dropbox work directory
+alias dropbox-work-cli='HOME=$HOME/.dropbox-work dropbox-cli'

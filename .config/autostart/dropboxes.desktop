@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Dropboxes
+GenericName=Dropboxes
+Comment=Run Multiple Dropbox
+Exec=/home/reed/bin/many-dropboxes.sh
+Terminal=false
+Type=Application
+X-GNOME-Autostart-enabled=true
