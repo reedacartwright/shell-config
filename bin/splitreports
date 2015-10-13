@@ -1,0 +1,60 @@
+#!/usr/bin/perl
+
+#usage: perl splitreports.pl merged.csv *.pdf
+
+use v5.22;
+use warnings;
+use strict;
+use Text::CSV;
+
+my $roster = shift;
+my $rcsv = Text::CSV->new({binary => 1});
+open(my $rh, "<:encoding(utf8)", $roster) or die "unable to open roster file";
+my $rheader = $rcsv->getline( $rh );
+
+# Parse merged roster
+my %db = ();
+while( my $row = $rcsv->getline( $rh ) ) {
+	my $id = $row->[7];
+	my $ln = $row->[8];
+	my $fn = $row->[9];
+	my $str = "$ln $fn $id";
+	$str =~ s/\s+/ /g;
+	$str =~ s/^\s//;
+	$str =~ s/\s$//;
+	$db{$str} = $row->[6];
+}
+
+my @PDFS = @ARGV;
+say "Merging input pdfs ...";
+system("pdfjam -q --paper letter -o reports-ALL.pdf -- " . join(' ', @PDFS));
+
+my %REC = ();
+
+my $file = "reports-ALL.pdf";
+my $txt = `pdftotext -layout $file -`;
+my @pages = split(/\f/,$txt);
+for my $i(0..$#pages) {
+	my $p = $pages[$i];
+	next unless($p =~ /^  Individual Student Feedback/);
+	my ($id) = $p =~ /^Student:\s+(.+)/m;
+	$id =~ s/\s+/ /g;
+	my $rec = $db{$id} || "Unknown";
+	$REC{$rec} ||= {};
+	$REC{$rec}->{$id} = $i+1;
+}
+
+while(my($k,$v) = each(%REC)) {
+	my $name = $k;
+	$name =~ tr/ //d;
+	say "Creating reports-$name.pdf ...";
+	unlink("reports-$name.pdf");
+	my @kk = sort {$a cmp $b} keys(%{$v});
+	my @vv = @{$v}{@kk};
+	push(@vv,'{}') if(@vv % 2 == 1);
+
+	my $half= @vv/2;
+	@vv = @vv[ map { $_, $_+$half} 0..($half-1) ];
+	my $args = join(',',@vv);
+	system("pdfjam --nup 1x2 --trim '0in 5in 0in 0.0in' --clip true --paper letter -q -o 'reports-$name.pdf' -- $file $args");
+}

@@ -82,3 +82,8 @@ shopt -s checkwinsize
 
 # alias for working with Dropbox work directory
 alias dropbox-work-cli='HOME=$HOME/.dropbox-work dropbox-cli'
+
+#gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=output.pdf input.pdf
+
+#remove BOM if it exists
+alias removebom="awk '{if(NR==1)sub(/^\xef\xbb\xbf/,\"\");print}'"

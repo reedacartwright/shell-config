@@ -1,0 +1,113 @@
+#!/usr/bin/perl
+
+use v5.22;
+use warnings;
+use strict;
+
+use Text::CSV;
+use Text::Fuzzy;
+
+my $maxfuzz = 12;
+
+my $roster = shift;
+my $rcsv = Text::CSV->new({binary => 1});
+open(my $rh, "<:encoding(utf8)", $roster) or die "unable to open roster file";
+my $rheader = $rcsv->getline( $rh );
+
+my $exam = shift;
+my $xcsv = Text::CSV->new({binary => 1});
+open(my $xh, "<:encoding(utf8)", $exam) or die "unable to open exam file";
+my $xheader = $xcsv->getline( $xh );
+
+# Parse roster
+my @roster = ();
+my %roster_id = ();
+while( my $row = $rcsv->getline( $rh ) ) {
+	my $id = $row->[2]; # third column
+	push(@roster, $row);
+	$roster_id{$id} = @roster - 1;
+}
+
+# Parse Exam results
+my @results = ();
+my %result_id = ();
+while( my $row = $xcsv->getline( $xh ) ) {
+	$result_id{$row->[0]} += 1;
+	push(@results, $row);
+}
+close($rh);
+close($xh);
+
+# Merge
+my @output1 = ();
+my @unknowns = ();
+
+# Round one, exact match
+for my $i (0..$#results) {
+	my @s = @{$results[$i]};
+	my $id = $s[0];
+	if(defined $roster_id{$id} && $result_id{$id} == 1) {
+		unshift(@s, @{$roster[$roster_id{$id}]});
+		push(@output1, [@s]);
+		delete $roster_id{$id};
+	} else {
+		push(@unknowns, $i);
+	}
+}
+
+@output1 = sort {$a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] || $a->[2] <=> $b->[2] } @output1; 
+
+my @output2 = ();
+my @output3 = ();
+my @words = ();
+my @lines = ();
+while ( my ($k,$v) = each %roster_id ) {
+	my @s = @{$roster[$v]};
+	push(@lines, $v);
+	my $fn = substr($s[1], 0,6);
+	my $w = "$s[2],$s[0],$fn";
+	$w = uc($w);
+	push(@words, $w);
+}
+foreach my $u (@unknowns) {
+	my @s = @{$results[$u]};
+	my $w = "$s[0],$s[1],$s[2]";
+	$w = uc($w);
+	my $tf = Text::Fuzzy->new($w,max => $maxfuzz);
+	my $nearest = $tf->nearest (\@words);
+	if(defined $nearest) {
+		my $l = $lines[$nearest];
+		my @z = (@{$roster[$l]}, @s);
+		push(@output2, [@z]);
+	} else {
+		my @z = (('') x 7, @s);
+		push(@output3, [@z]);
+	}
+}
+
+@output2 = sort {$a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] || $a->[2] <=> $b->[2] } @output2; 
+
+my @header = (@$rheader,map {"x$_"} @$xheader);
+
+say(join(",", map {"\"$_\""} @{header}));
+
+
+foreach(@output3) {
+	my @s = @{$_};
+	my $last = pop(@s);
+	say(join(",", (map {"\"$_\""} @s), $last));
+}
+say("");
+
+foreach(@output2) {
+	my @s = @{$_};
+	my $last = pop(@s);
+	say(join(",", (map {"\"$_\""} @s), $last));
+}
+say("");
+
+foreach(@output1) {
+	my @s = @{$_};
+	my $last = pop(@s);
+	say(join(",", (map {"\"$_\""} @s), $last));
+}

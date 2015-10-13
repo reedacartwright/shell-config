@@ -1,6 +1,6 @@
 #!/bin/sh
 echo Starting personal Dropbox
-dropbox-cli start
+/home/reed/.dropbox-dist/dropboxd &
 
 echo Starting ASU Dropbox
-HOME=/home/reed/.dropbox-work dropbox-cli start
+HOME=/home/reed/.dropbox-work /home/reed/.dropbox-work/.dropbox-dist/dropboxd &
