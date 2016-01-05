@@ -105,10 +105,12 @@ if ($?prompt) then
 endif
 
 if( $?REMOTEHOST ) then
-	if($TERM == "xterm") then
-		set term=xterm-color
-		setenv LANG en_US.UTF-8
-		setenv LC_CTYPE en_US.UTF-8
+	if( $?TERM ) then
+		if( $TERM == "xterm" ) then
+			set term=xterm-color
+			setenv LANG en_US.UTF-8
+			setenv LC_CTYPE en_US.UTF-8
+		endif
 	endif
 else
 	set TERM cons25
