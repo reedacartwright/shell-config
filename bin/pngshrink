@@ -1,0 +1,22 @@
+#!/bin/sh
+file=$1
+
+filehead=`basename ${file} .png`
+
+cp ${file} ${filehead}.orig.png
+
+# Run pngquant
+echo
+echo "==== Quantifying ${file} ..."
+pngquant -fv --speed 1 --ext .png ${file}
+
+# Run pngout
+echo
+echo "==== Optimizing ${file} ..."
+pngout ${file}
+
+# Zopfli Compression
+echo
+echo "==== Compression ${file} ..."
+advdef -z -4 -i 5 ${file}
+

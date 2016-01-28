@@ -1,0 +1,23 @@
+#!/bin/sh
+
+author="Reed A. Cartwright"
+
+echo "====Changed Lines===="
+
+git log --numstat --pretty="%H" --use-mailmap --author="${author}" --after="${1}" --before="${2}" |
+	awk 'NF==3 {plus+=$1; minus+=$2} END {tot=plus+minus; printf(" Reed: %d, +%d, -%d\n", tot, plus, minus)}'
+
+git log --numstat --pretty="%H"  --after="${1}" --before="${2}" |
+	awk 'NF==3 {plus+=$1; minus+=$2; n+=1} END {tot=plus+minus; printf("Total: %d, +%d, -%d\n", tot, plus, minus)}'
+
+echo ""
+echo "====Commit Count===="
+
+echo -n " Reed: "
+git log --pretty="%H" --use-mailmap --author="${author}" --after="${1}" --before="${2}" | wc -l
+echo -n "Total: "
+git log --pretty="%H" --use-mailmap --after="${1}" --before="${2}" | wc -l
+
+echo ""
+echo "====Author List===="
+git log --format='%aN' | sort | uniq

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+loc=${3:-.}
+
+echo "====Changed Lines===="
+
+echo -n " Reed: "
+svn log --diff -r{${1}-01-01}:{${2}-01-01} $loc | sed -e '1d' -e '2,/----/ d' | diffstat | tail -1
+
+echo ""
+echo "====Commit Count===="
+
+echo -n " Reed: "
+svn log -r{${1}-01-01}:{${2}-01-01} $loc | sed -e '1d' -e '2,/----/ d' | grep "^------" | wc -l
+
