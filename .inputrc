@@ -1,5 +1,8 @@
 $include /etc/inputrc
 
+set bell-style visible
+set revert-all-at-newline on
+
 "\e[A":history-search-backward
 "\e[B":history-search-forward
 
