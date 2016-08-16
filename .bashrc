@@ -87,3 +87,6 @@ alias dropbox-work-cli='HOME=$HOME/.dropbox-work dropbox-cli'
 
 #remove BOM if it exists
 alias removebom="awk '{if(NR==1)sub(/^\xef\xbb\xbf/,\"\");print}'"
+
+#start vpn
+alias rcvpn="forticlientsslvpn_cli --server portal.researchcomputing.asu.edu:9443 --vpnuser rcartwri"
