@@ -90,3 +90,6 @@ alias removebom="awk '{if(NR==1)sub(/^\xef\xbb\xbf/,\"\");print}'"
 
 #start vpn
 alias rcvpn="forticlientsslvpn_cli --server portal.researchcomputing.asu.edu:9443 --vpnuser rcartwri"
+
+#run makepkg as nobody
+alias makepkg="sudo -u nobody makepkg"
