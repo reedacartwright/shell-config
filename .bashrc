@@ -81,7 +81,7 @@ shopt -s checkwinsize
 #ssh-add -l >/dev/null || alias ssh='ssh-add -l >/dev/null || ssh-add && unalias ssh; ssh'
 
 # alias for working with Dropbox work directory
-alias dropbox-work-cli='HOME=$HOME/.dropbox-work dropbox-cli'
+alias dropbox-home-cli='env HOME=$HOME/.dropbox-home dropbox-cli'
 
 #gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=output.pdf input.pdf
 

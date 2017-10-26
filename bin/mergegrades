@@ -9,17 +9,25 @@ use Text::Fuzzy;
 
 my $maxfuzz = 12;
 
+# trim extra whitespace in string inefficiently
+sub trim { my $s = shift; $s =~ s/^\s+|\s+$//g; return $s };
+
+
+# read roster file
 my $roster = shift;
 my $rcsv = Text::CSV->new({binary => 1});
 open(my $rh, "<:encoding(utf8)", $roster) or die "unable to open roster file";
 my $rheader = $rcsv->getline( $rh );
 
+# read results file
 my $exam = shift;
 my $xcsv = Text::CSV->new({binary => 1});
 open(my $xh, "<:encoding(utf8)", $exam) or die "unable to open exam file";
 my $xheader = $xcsv->getline( $xh );
 
-# Parse roster
+# Parse roster into an array of arrays (@roster)
+# Create a hash that connects student id to roster row
+# assumes that student id is third column
 my @roster = ();
 my %roster_id = ();
 while( my $row = $rcsv->getline( $rh ) ) {
@@ -28,12 +36,15 @@ while( my $row = $rcsv->getline( $rh ) ) {
 	$roster_id{$id} = @roster - 1;
 }
 
-# Parse Exam results
+# Parse Exam results into an array of arrays (@results)
+# Use a hash (%result_id) to store how many times each id is seen
+# assumes id is first row
 my @results = ();
 my %result_id = ();
 while( my $row = $xcsv->getline( $xh ) ) {
-	$result_id{$row->[0]} += 1;
-	push(@results, $row);
+	my @s = map { trim($_) } @$row;
+	$result_id{$s[0]} += 1;
+	push(@results, [@s]);
 }
 close($rh);
 close($xh);

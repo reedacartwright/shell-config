@@ -1,6 +1,6 @@
 #!/bin/sh
-echo Starting personal Dropbox
+echo Starting ASU Dropbox
 /home/reed/.dropbox-dist/dropboxd &
 
-echo Starting ASU Dropbox
-HOME=/home/reed/.dropbox-work /home/reed/.dropbox-work/.dropbox-dist/dropboxd &
+echo Starting Home Dropbox
+env HOME=/home/reed/.dropbox-home /home/reed/.dropbox-home/.dropbox-dist/dropboxd &
