@@ -7,7 +7,7 @@
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
 # Evaluate SSH-Agent
-hash keychain 2>/dev/null && eval $(keychain --agents ssh --quick --quiet --eval id_rsa)
+type -p keychain >/dev/null && eval $(keychain --agents ssh --quick --quiet --eval id_rsa)
 
 if [ -n "${DESKTOP_SESSION}" ]; then
   eval $(gnome-keyring-daemon --start)

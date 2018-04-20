@@ -10,18 +10,17 @@
 
 # put timestamps in my bash history
 export HISTTIMEFORMAT='%F %T '
- 
-# don't put duplicate commands into the history
-export HISTCONTROL=ignoredups
- 
-# record only the most recent duplicated command (see above)
-export HISTCONTROL=ignoreboth
- 
+  
 # don't record these commands in the history; who cares about ls?
 export HISTIGNORE='pwd:ls:history:'
  
 # keep the history size up to 4096 lines
 export HISTSIZE=4096 
+
+# keep history in sync between terminals
+HISTCONTROL=ignoredups:erasedups
+shopt -s histappend
+PROMPT_COMMAND="history -n; history -w; history -c; history -r; ${PROMPT_COMMAND}"
 
 type -p nano >/dev/null && export EDITOR=nano
 type -p less >/dev/null && export PAGER=less
