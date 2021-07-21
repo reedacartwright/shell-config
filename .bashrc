@@ -62,13 +62,23 @@ alias procperuser='ps ax -o user | sort | uniq -c | sort -nr'
 # show the processes consuming the most memory
 memhogs () { TR=`free|grep Mem:|awk '{print $2}'`;ps axo rss,comm,pid|awk -v tr=$TR '{proc_list[$2]+=$1;} END {for (proc in proc_list) {proc_pct=(proc_list[proc]/tr)*100; printf("%d\t%-16s\t%0.2f%\n",proc_list[proc],proc,proc_pct);}}'|sort -n |tail -n 10; };
 
-if [[ $EUID -ne 0 ]]; then 
-# Green for users
-  PS1='\[\e[1;32m\][\u@\h \W\[\e[0m\]`[ $? == 0 ] || echo " \[\e[1;91m\]\\\\$?=$?\[\e[0m\]"`\[\e[1;32m\]]\$\[\e[0m\] '
+# setup prompt
+if [[ $EUID -ne 0 ]]; then
+  ps_col1="\e[1;32m" # green
+  ps_col2="\e[1;91m" # red
 else
-# red for root
-  PS1='\[\e[1;31m\][\u@\h \W\[\e[0m\]`[ $? == 0 ] || echo " \[\e[1;92m\]\\\\$?=$?\[\e[0m\]"`\[\e[1;31m\]]\$\[\e[0m\] '
+  ps_col1="\e[1;31m" # red
+  ps_col2="\e[1;92m" # green
 fi
+
+ps1_print_error () {
+  status=$?
+  if [[ $status -ne 0 ]]; then
+    echo -e " \001${ps_col2}\002\$?=$status\001\e[0m\002"
+  fi
+}
+
+PS1="\[${ps_col1}\][\u@\h \W\[\e[0m\]"'$(ps1_print_error)'"\[${ps_col1}\]]\$\[\e[0m\] "
 
 [[ -f /etc/profile.d/vte.sh ]] && . /etc/profile.d/vte.sh
 
