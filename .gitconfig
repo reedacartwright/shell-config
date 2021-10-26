@@ -1,7 +1,7 @@
 # This is Git's per-user configuration file.
 [user]
 	name = Reed A. Cartwright
-	email = cartwright@asu.edu
+	email = racartwright@gmail.com
 [core]
 	autocrlf = input
 	editor = nano -w
